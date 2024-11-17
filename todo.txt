@@ -1,5 +1,0 @@
-1. Build rss feed of a site from link, elements to pick
-2. Parse correct RSS/Atom feed
-3. Use Jinja template from rendering
-4. Dynamic single page api
-5. If period has passed, poll rss page again and cache results
