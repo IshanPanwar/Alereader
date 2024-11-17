@@ -6,34 +6,10 @@ use std::{collections::HashMap, fs, fs::read_to_string, path::PathBuf, process};
 
 pub struct View {
     env: Environment<'static>,
-    staticfiles: HashMap<String, String>,
 }
 
 impl View {
     pub fn new(templatedir: PathBuf) -> Self {
-        // cache staticfiles
-        let mut staticdir = templatedir.clone();
-        staticdir.push("static");
-        //get staticfiles
-        let staticfiles_vec: Vec<PathBuf> = getfiles(staticdir);
-        // make hashmap
-        let mut staticfiles: HashMap<String, String> = HashMap::new();
-        for path in staticfiles_vec {
-            let contents = match read_to_string(path.clone()) {
-                Ok(s) => s,
-                Err(_) => {
-                    error!("Unable to read static file!");
-                    String::new()
-                }
-            };
-            if let Some(path_str) = path.file_name().unwrap().to_str() {
-                staticfiles.insert(path_str.to_string(), contents);
-                debug!("{} collected!", path_str.to_string());
-            } else {
-                error!("Error while collecting staticfiles");
-            }
-        }
-
         //making env
         let mut env = Environment::new();
         let mut homefile = templatedir.clone();
@@ -86,15 +62,8 @@ impl View {
                 process::exit(-1);
             }
         }
-        Self { env, staticfiles }
-    }
-    pub async fn servestatic(&self, name: String) -> String {
-        if let Some(s) = self.staticfiles.get(&name) {
-            s.to_string()
-        } else {
-            error!("Unable to find resource {name}");
-            return self.serveerror(404).await;
-        }
+
+        Self { env }
     }
     pub async fn servefeed_rss(&self, data: Channel) -> String {
         let tmp = self.env.get_template("feed").unwrap();

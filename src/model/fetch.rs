@@ -11,11 +11,20 @@ use reqwest::{
     Client,
 };
 use rss::Channel;
-use std::process;
+use std::{
+    hash::{DefaultHasher, Hash, Hasher},
+    process,
+};
+use tokio::{
+    fs,
+    fs::{try_exists, File},
+    io::AsyncWriteExt,
+};
 
 pub enum DataPkt {
     Error(u16),
     Request(String, Sender<DataPkt>),
+    ForceRequest(String, Sender<DataPkt>),
     Channel(Channel),
     Feed(Feed),
 }
@@ -49,7 +58,7 @@ impl Fetcher {
     }
     pub async fn forceget(&self, data: DataPkt) {
         let (name, tx) = match data {
-            DataPkt::Request(name, tx) => (name, tx),
+            DataPkt::ForceRequest(name, tx) => (name, tx),
             _ => {
                 error!("Illegal request received! Shutting down");
                 process::exit(-1);
@@ -72,6 +81,7 @@ impl Fetcher {
                             } else if let Ok(feed) = Feed::read_from(&txt.as_bytes()[..]) {
                                 tx.send(DataPkt::Feed(feed)).unwrap();
                             }
+                            self.archive(&txt, &name).await;
                             self.cache.insert(name, txt);
                         }
                         Err(_) => {
@@ -124,6 +134,7 @@ impl Fetcher {
                                     } else if let Ok(feed) = Feed::read_from(&txt.as_bytes()[..]) {
                                         tx.send(DataPkt::Feed(feed)).unwrap();
                                     }
+                                    self.archive(&txt, &name).await;
                                     self.cache.insert(name, txt);
                                 }
                                 Err(_) => {
@@ -138,11 +149,48 @@ impl Fetcher {
                         }
                     }
                     None => tx.send(DataPkt::Error(502)).unwrap(),
-                } //inner match end
-            } //none end
-        } //outer match end
-    } //function end
-    async fn archive(&self, data: &str) {
-        todo!()
+                }
+            }
+        }
     }
+    async fn archive(&self, data: &str, name: &str) {
+        if self.store.archive_lst.contains(&name.to_string()) {
+            if let Some(mut dir) = self.store.archivedir.clone() {
+                debug!("Beginning archive process");
+                let mut name = name.to_string();
+                name.push_str(".xml");
+                dir.push(name);
+                //check if filename exits
+                if try_exists(dir.clone()).await.unwrap() {
+                    match fs::read_to_string(dir.clone()).await {
+                        Ok(s) => {
+                            if calculate_hash(&s) != calculate_hash(&data.to_string()) {
+                                match File::create(dir.clone()).await {
+                                    Ok(mut s) => s.write_all(data.as_bytes()).await.unwrap(),
+                                    Err(_) => error!("Unable to write to file {:?}", dir),
+                                }
+                            } else {
+                                debug!("Data already archived")
+                            }
+                        }
+                        Err(_) => error!("Unable to read file {:?}", dir),
+                    };
+                } else {
+                    match File::create_new(dir.clone()).await {
+                        Ok(mut s) => s.write_all(data.as_bytes()).await.unwrap(),
+                        Err(_) => error!("Unable to create file {:?}", dir),
+                    }
+                }
+            } else {
+                error!("archivedir not defined, Not archiving");
+            }
+            debug!("Archiving complete");
+        }
+    }
+}
+
+fn calculate_hash<T: Hash>(t: &T) -> u64 {
+    let mut s = DefaultHasher::new();
+    t.hash(&mut s);
+    s.finish()
 }

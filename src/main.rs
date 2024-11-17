@@ -1,6 +1,7 @@
 mod model;
 mod view;
 
+use actix_files::Files;
 use actix_web::{web, App, HttpServer};
 use clap::Parser;
 use crossbeam::channel::{unbounded, Receiver, Sender};
@@ -12,7 +13,7 @@ use model::{
 };
 use std::{sync::Arc, thread};
 use tokio::runtime::Builder;
-use view::client::{getfeed, getforcefeed, getfull, gethome, getstatic, Controller};
+use view::client::{getfeed, getforcefeed, getfull, gethome, Controller};
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
@@ -58,20 +59,29 @@ async fn main() -> std::io::Result<()> {
         loop {
             if let Ok(name) = model_rx.recv() {
                 let downref = Arc::clone(&downman);
-                model_runtime.spawn(async move {
-                    downref.get(name).await;
-                });
+                if let DataPkt::Request(s, t) = name {
+                    model_runtime.spawn(async move {
+                        downref.get(DataPkt::Request(s, t)).await;
+                    });
+                } else if let DataPkt::ForceRequest(s, t) = name {
+                    model_runtime.spawn(async move {
+                        downref.forceget(DataPkt::ForceRequest(s, t)).await;
+                    });
+                }
             }
         }
     });
 
     // run client side
     let client = clientbag.clients.clone();
+    let mut templatedir = clientbag.templatedir.clone();
+    templatedir.push("static");
+    let templatedir = templatedir.to_str().unwrap().to_string();
     let controller = web::Data::new(Controller::new(clientbag, model_tx));
     HttpServer::new(move || {
         App::new()
             .app_data(controller.clone())
-            .service(getstatic)
+            .service(Files::new("/static", &templatedir))
             .service(gethome)
             .service(getfull)
             .service(getfeed)
