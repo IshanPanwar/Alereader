@@ -1,15 +1,26 @@
 [package]
-name = "sanvi"
+name = "alereader"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-actix = "0.13.5"
-atom_syndication = "0.12.4"
-clap = "4.5.20"
 eyre = "0.6.12"
-log4rs = "1.3.0"
-minijinja = "2.3.1"
-rss = "2.0.9"
-scraper = "0.20.0"
-tokio = "1.40.0"
+directories = "5.0.1"
+env_logger = "0.11.5"
+log = "0.4.22"
+# support libraries
+quick_cache = "0.6.9"
+regex = "1.11.1"
+tokio = { version = "1", features = ["full"] }
+# web libraries
+minijinja = { version = "2.5.0", features = ["json", "loader"] }
+reqwest = { version = "0.12.9", features = ["json"] }
+futures = "0.3.31"
+actix-cors = "0.7.0"
+actix-files = "0.6.6"
+actix-web = "4"
+rustls = "0.23.16"
+crossbeam = "0.8.4"
+atom_syndication = { version = "0.12.5", features = ["serde", "with-serde"] }
+rss = { version = "2.0.10", features = ["atom", "atom_syndication", "serde", "with-serde", "url", "validation"] }
+clap = { version = "4.5.21", features = ["derive"] }
