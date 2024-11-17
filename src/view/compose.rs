@@ -2,7 +2,7 @@ use atom_syndication::Feed;
 use log::{debug, error};
 use minijinja::{context, Environment, Value};
 use rss::Channel;
-use std::{collections::HashMap, fs, fs::read_to_string, path::PathBuf, process};
+use std::{collections::HashMap, fs::read_to_string, path::PathBuf, process};
 
 pub struct View {
     env: Environment<'static>,
@@ -103,19 +103,4 @@ impl View {
             }
         }
     }
-}
-
-fn getfiles(dir: PathBuf) -> Vec<PathBuf> {
-    let mut files = Vec::new();
-
-    if let Ok(entries) = fs::read_dir(dir) {
-        for entry in entries.filter_map(Result::ok) {
-            let path = entry.path();
-            if path.is_file() {
-                files.push(path);
-            }
-        }
-    }
-
-    return files;
 }

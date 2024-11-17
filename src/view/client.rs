@@ -2,7 +2,6 @@ use crate::model::{fetch::DataPkt, init::ClientBag};
 use crate::view::compose::View;
 use actix_web::{
     get,
-    http::header::ContentType,
     web::{Data, Path},
     HttpResponse,
 };
