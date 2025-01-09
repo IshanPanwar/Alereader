@@ -1,0 +1,62 @@
+<div class="card mb-3">
+	{%if icon or logo%}
+		<div class="row g-0">
+			<div class="col-md-4">
+				{%if logo%}
+					<img src="{{logo}}" class="img-fluid rounded-start"></img>
+				{%elif icon%}
+				<img src="{{icon}}" class="img-fluid rounded-start"></img>
+				{%endif%}
+			</div>
+	{%endif%}
+	{%if icon or logo%}<div class="col-md-8">{%endif%}
+		<div class="card-body">
+			<h3 class="card-title">{{title.value}}</h3>
+			{% if updated or contributors %}
+			<h5 class="card-subtitle">
+				{%if updated%}Updated on: &lt{{updated}}&gt{%endif%}{%if contributors%} by {%for contributor in contributors%}{{contributor.name}}, {%endfor%}{%endif%}
+			</h5>
+			{% endif %}
+			{%if subtitle%}<p class="card-text">{{subtitle.value}}</p>{%endif%}
+			{%if links%}
+				<p>
+					{%for i in links%}<a href="{{i.href}}">{{i.rel}}</a>{%endfor%}
+				</p>
+			{%endif%}
+		</div>
+		<div class="card-footer">
+			<ul>{%for i in categories%}<li>{{i.term}}</li>{%endfor%}</ul>
+		</div>
+	{%if icon or logo%}</div></div>{%endif%}
+</div>
+
+<div class="viewpane-view row row-cols-md-1 row-cols-lg-2 row-cols-xl-3 g-4">
+{% for entry in entries %}
+	<div class="col">
+		<div class="card justify-content-center">
+		<div class="card-body">
+			<h4 class="card-title">{{entry.title.value}}</h4>
+				{%if entry.authors%}
+				<p class="card-subtitle mb-2 text-body-secondary">On &lt{{entry.updated}}&gt{%if entry.authors%} by {%for author in entry.authors%}{{author.name}}, {%endfor%}
+				{%endif%}
+				</p>
+			{%endif%}
+			{%if entry.summary%}<p class="card-text">{{entry.summary.value}}</p>{%endif%}
+			{%if entry.content%}
+				{{entry.content.value}}
+			{%endif%}
+			<br>
+			{%if entry.links%}
+				{%for i in entry.links%}<br><a href="{{i.href}}" class="btn btn-primary mt-2"><i class="fa-solid fa-link"></i></a>
+				{%endfor%}
+			{%endif%}
+		</div>
+		{%if entry.categories%}
+		<div class="card-footer text-body-secondary align-items-center p-3 fst-italic font-monospace">
+			{%for i in entry.categories%}#{{i.term}} {%endfor%}
+		</div>{%endif%}
+		</div>
+	</div>
+{%endfor%}
+</div>
+<br><hr><br>

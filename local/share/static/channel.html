@@ -1,0 +1,46 @@
+<div class="card mb-3">
+	{%if image%}<div class="row g-0"><div class="col-md-4"><img src="{{image.url}}" class="img-fluid rounded-start"></img></div>{%endif%}
+	{%if image%}<div class="col-md-8">{%endif%}
+	<div class="card-body">
+		<h3 class="card-title">{{title}}</h3>
+		{% if pub_date %}<h5 class="card-subtitle">{{pub_date}}</h5>{% endif %}
+		<p class="card-text">{{description}}</p>
+		{% if image %}{% if image.link %}<a href="{{image.link}}" class="btn btn-primary">Link</a>{%endif%}{%endif%}
+	</div>
+	{%if image%}</div></div>{%endif%}
+</div>
+
+<div class="viewpane-view row row-cols-md-1 row-cols-lg-2 row-cols-xl-3 g-4">
+{% for item in items %}
+	<div class="col">
+		<div class="card justify-content-center">
+		<div class="card-body">
+			<h4 class="card-title">{{item.title}}</h4>
+				{%if item.author or item.pub_date%}<p class="card-subtitle mb-2 text-body-secondary">{%if item.author%}By {{item.author}}{%endif%}{%if item.pub_date%} on &lt{{item.pub_date}}&gt{%endif%}</p>{%endif%}
+			{%if item.description%}<p class="card-text">{{item.description}}</p>{%endif%}
+			{%if item.enclosure%}
+				{%if item.enclosure.mime_type=="image"%}
+					<img src="{{item.enclosure.url}}" class="img-fluid"></img>
+				{%endif%}
+			{%endif%}
+			{%if item.content%}<div class="card justify-content-center"><div class="card-body">{{item.content}}</div></div>{%endif%}
+			{%if item.extensions %}
+				{%if item.extensions.media%}
+					{%if item.extensions.media.content%}
+						{%if item.extensions.media.content[0].attrs.medium == "image"%}
+					<img src="{{item.extensions.media.content[0].attrs.url}}" class="img-fluid"></img>
+						{%elif item.extensions.media.content[0].attrs.medium == "video"%}
+						<video controls><source src="{{item.extensions.media.content[0].attrs.url}}" type="video/mp4"></video>
+						{%endif%}
+					{%endif%}
+				{%endif%}
+			{%endif%}
+			{%if item.comments%}<a class="btn btn-primary" href="{{item.comments}}"><i class="fa-solid fa-comment"></i></a>{%endif%}
+			{%if item.link%}<a class="btn btn-primary" href="{{item.link}}"><i class="fa-solid fa-link"></i></a>{%endif%}
+		</div>
+			{%if item.categories%}<div class="card-footer text-body-secondary align-items-center p-3 fst-italic font-monospace">{%for i in item.categories%}#{{i.name}} {%endfor%}</div>{%endif%}
+		</div>
+	</div>
+{%endfor%}
+</div>
+<br><hr><br>

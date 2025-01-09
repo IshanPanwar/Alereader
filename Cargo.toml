@@ -18,9 +18,10 @@ reqwest = { version = "0.12.9", features = ["json"] }
 futures = "0.3.31"
 actix-cors = "0.7.0"
 actix-files = "0.6.6"
-actix-web = "4"
+actix-web = {version = "4", features=["rustls-0_23"]}
 rustls = "0.23.16"
 crossbeam = "0.8.4"
 atom_syndication = { version = "0.12.5", features = ["serde", "with-serde"] }
 rss = { version = "2.0.10", features = ["atom", "atom_syndication", "serde", "with-serde", "url", "validation"] }
 clap = { version = "4.5.21", features = ["derive"] }
+rustls-pemfile = "2.2.0"

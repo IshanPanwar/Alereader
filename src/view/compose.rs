@@ -16,6 +16,8 @@ impl View {
         homefile.push("home.html");
         let mut feedfile = templatedir.clone();
         feedfile.push("feed.html");
+        let mut channelfile = templatedir.clone();
+        channelfile.push("channel.html");
         let mut errorfile = templatedir.clone();
         errorfile.push("error.html");
 
@@ -40,6 +42,13 @@ impl View {
                 process::exit(-1);
             }
         };
+        let channelcontents = match read_to_string(channelfile.clone()) {
+            Ok(s) => s,
+            Err(_) => {
+                error!("Failed to read channelfile!");
+                process::exit(-1);
+            }
+        };
 
         match env.add_template_owned(String::from("home"), homecontents) {
             Ok(()) => debug!("home.html has been parsed!"),
@@ -55,6 +64,13 @@ impl View {
                 process::exit(-1);
             }
         }
+        match env.add_template_owned(String::from("channel"), channelcontents) {
+            Ok(()) => debug!("channel.html has been parsed!"),
+            Err(_) => {
+                error!("Failed to add channelfile to collection!");
+                process::exit(-1);
+            }
+        }
         match env.add_template_owned(String::from("error"), errorcontents) {
             Ok(()) => debug!("error.html has been parsed!"),
             Err(_) => {
@@ -66,7 +82,7 @@ impl View {
         Self { env }
     }
     pub async fn servefeed_rss(&self, data: Channel) -> String {
-        let tmp = self.env.get_template("feed").unwrap();
+        let tmp = self.env.get_template("channel").unwrap();
         let ctx = Value::from_serialize(data);
         match tmp.render(ctx) {
             Ok(s) => return s,

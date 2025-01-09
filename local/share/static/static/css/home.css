@@ -1,0 +1,104 @@
+body {
+  background-image: url("/static/files/home-bg.png");
+}
+ul.left-menu a:link,
+ul.left-menu a:visited,
+ul.left-menu a {
+  text-decoration: none;
+  color: #444;
+}    	
+
+ul.left-menu {
+  border-left: solid 5px #b62a1d;
+  background: #efefef; 
+  border-radius: 5px;
+  list-style: none;
+  padding-left: 0; 
+  /*width: 182px; Set width if required*/
+}
+
+ul.left-menu ul {
+  padding-left: 0; 
+  list-style: none;
+}
+ul.left-menu ul li {
+  line-height: 1.2em; 
+  cursor: pointer;
+}
+ul.left-menu li a {
+  display: block; 
+  margin-left: 0em; 
+  padding: .5em;
+}
+
+/* Indentation Theme */
+ul.left-menu.theme1 li a {
+  display: block; 
+  margin-left: 0em;
+  padding: .5em;
+  overflow-wrap: break-word;
+}
+ul.left-menu.theme1 li li a {margin-left: 1em;}
+ul.left-menu.theme1 li li li a {margin-left: 2em;}
+ul.left-menu.theme1 li li li li a {margin-left: 3em;}
+ul.left-menu.theme1 li li li li li a {margin-left: 4em;}
+ul.left-menu.theme1 li li li li li li a {margin-left: 5em;} /* etc */
+
+/* Gradient Themes */
+ul.left-menu.theme2 {
+  background: #ccc;
+}
+ul.left-menu.theme2 ul {
+  padding-left: 0; 
+  background: rgba(255,255,255,.5);
+  list-style: none;
+}
+
+ul.left-menu.theme3 ul {
+  padding-left: 0; 
+  background: rgba(128,128,128,.1);
+  list-style: none;
+}
+
+ul.left-menu li:last-child {
+  border-bottom: none;
+}
+
+.sidebar {
+  margin: 0;
+  padding: 5px;
+  width: 200px;
+  background-color: #f1f1f1;
+  position: fixed;
+  height: 100%;
+}
+
+.sidebar a {
+  display: block;
+}
+
+.sidebar h3 {text-align: center;}
+
+div.viewpane {
+  margin-left: 210px;
+  padding: 60px;
+}
+
+@media screen and (max-width: 700px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+  .sidebar a {float: left;}
+  .sidebar h3 {text-align: right;}
+  div.content {margin-left: 0;}
+}
+
+/* On screens that are less than 400px, display the bar vertically, instead of horizontally */
+@media screen and (max-width: 400px) {
+  .sidebar a {
+    text-align: center;
+    float: none;
+  }
+}

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+	<head>
+		<link href="/static/css/bootstrap.min.css" rel="stylesheet" type="text/css" integrity="sha512-jnSuA4Ss2PkkikSOLtYs8BlYIeeIK1h99ty4YfvRPAlzr377vr3CXDb7sb7eEEBYjDtcYj+AjBH3FLv5uSJuXg==">
+		<link href="/static/css/font-awesome-all.min.css" rel="stylesheet" type="text/css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==">
+		<link href="/static/css/home.css" rel="stylesheet" type="text/css" integrity="sha512-/vGtSazbj7ezJZxoHtscy/1hVvbehYEOz3/i76uHrfcMalFOKKLfWbOcBNX/5Dwgk2L3VN+14xDcVS4jSBYzXA==">
+		
+		<script src="/static/js/bootstrap.bundle.min.js" integrity="sha512-7Pi/otdlbbCR+LnW+F7PwFcSDJOuUJB3OxtEHbg4vSMvzvJjde4Po1v4BR9Gdc9aXNUNFVUY+SK51wWT8WF0Gg=="></script>
+		<script src="/static/js/jquery-3.6.0.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="></script>
+		<script src="/static/js/font-awesome-all.min.js" integrity="sha512-b+nQTCdtTBIRIbraqNEwsjB6UvL3UEMkXnhzd8awtCYh0Kcsjl9uEgwVFVbhoj3uu1DO1ZMacNvLoyJJiNfcvg=="></script>
+		<script src="/static/js/home.js" integrity="sha512-yXIa1EiKPavsrngVvDHloTr/TnYf2iNvIYNcwAPA2jW7mm6tresq/CjHyFTCJkbPkTz8fLjvOCX0rLKqfCuKoQ=="></script>
+		<title>Alereader</title>
+	</head>
+	<body>
+		<div class="sidebar">
+			<h3>Alereader</h3>
+			<ul class="left-menu theme1 theme3">
+
+				{% for item in headings %}
+					<li><a class="class-link" title="{{item.heading}}">{{item.heading}}</a>
+						<ul>
+						{% for name in item.names %}
+							<li><a class="feed-link" title="{{item.heading}}-{{name}}">{{name}}</a></li>
+						{% endfor %}
+						</ul>
+					</li>
+				{% endfor %}
+			</ul>
+		</div>
+		<div class="viewpane">
+		</div>
+	</body>
+</html>

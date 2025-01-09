@@ -22,12 +22,12 @@ pub struct ServerBag {
 
 fn projfiles() -> (String, String) {
     // returns project dir info, (config file, template folder)
-    let proj_dirs = ProjectDirs::from("com", "Sanvi", "Sanvi").unwrap();
+    let proj_dirs = ProjectDirs::from("com", "Alereader", "Alereader").unwrap();
     let config_dir = proj_dirs.config_local_dir();
     let data_dir = config_dir;
     //convert config_dir to pathbuf
     let mut config_file = config_dir.to_path_buf();
-    config_file.push("sanvi.conf");
+    config_file.push("alereader.conf");
     (
         config_file.to_str().unwrap().to_owned(),
         data_dir.to_str().unwrap().to_owned(),
